@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "todo-list-3be66": {
+      "hosting": {
+        "todo-list": [
+          "todo-list-3be66"
+        ]
+      }
+    }
+  }
+}
