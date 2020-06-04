@@ -19,22 +19,20 @@ import {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  taskList$: Observable<Array<Task>>;
-  loading$: Observable<boolean>;
+  taskList$: Observable<any[]>;
   error$: Observable<Error>;
   newTask: Task = { id: '', name: '' };
 
   constructor(
-    private store: Store<AppState> // private firestore: AngularFirestore
+    private store: Store<AppState>,
+    private firestore: AngularFirestore
   ) {}
 
   ngOnInit(): void {
-    this.taskList$ = this.store.select((store) => store.tasklist.list);
-    this.loading$ = this.store.select((store) => store.tasklist.loading);
+    this.taskList$ = this.firestore.collection('tasks').valueChanges();
     this.error$ = this.store.select((store) => store.tasklist.error);
 
     this.store.dispatch(new LoadTaskAction());
-    // this.firestore.collection();
   }
 
   addTask(taskName: string) {
