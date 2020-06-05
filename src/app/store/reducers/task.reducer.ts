@@ -51,9 +51,27 @@ export function TaskReducer(
     case TaskActionTypes.DELETE_TASK_SUCCESS:
       return {
         ...state,
-        // list: state.list.filter((item) => item.id !== action.payload),
+        list: state.list.filter((task) => task.id !== action.payload),
       };
     case TaskActionTypes.DELETE_TASK_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case TaskActionTypes.EDIT_TASK:
+      return {
+        ...state,
+      };
+    case TaskActionTypes.EDIT_TASK_SUCCESS:
+      return {
+        ...state,
+        // list: state.list.map((task) => {
+        //   if (task.id === action.payload.id) {
+        //     task.name = action.payload.name;
+        //   }
+        // }),
+      };
+    case TaskActionTypes.EDIT_TASK_FAILURE:
       return {
         ...state,
         error: action.payload,

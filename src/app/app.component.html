@@ -1,8 +1,15 @@
+<mat-toolbar fxLayoutAlign="center center">
+  My Todo List
+</mat-toolbar>
+
 <section fxLayoutAlign="center">
-  <mat-list>
-    <mat-list-item *ngFor="let task of taskList$ | async">
+  <mat-list fxLayout="column">
+    <mat-list-item *ngFor="let task of sortedTaskList">
       {{ task.name }}
-      <button mat-icon-button matSuffix (click)="deleteTask(task.id)">
+      <button mat-icon-button (click)="localEditTask(task)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button (click)="deleteTask(task.id)">
         <mat-icon>close</mat-icon>
       </button>
     </mat-list-item>
@@ -10,16 +17,47 @@
 </section>
 
 <section fxLayoutAlign="center">
-  <form fxLayout="column" #f="ngForm" (ngSubmit)="onSubmit(f)">
+  <form
+    fxLayout="column"
+    #newTaskForm="ngForm"
+    (ngSubmit)="onSubmitNewTask(newTaskForm)"
+    *ngIf="!isTaskBeingEdited"
+    fxLayoutGap="10px"
+  >
     <mat-form-field>
       <input
         matInput
+        ngModel
         type="text"
         placeholder="Enter a task"
-        ngModel
         name="task"
       />
     </mat-form-field>
-    <button mat-raised-button type="submit" color="primary">Add Task</button>
+    <button mat-raised-button type="submit" color="primary">
+      Add Task
+    </button>
+  </form>
+
+  <form
+    fxLayout="column"
+    #editTaskForm="ngForm"
+    (ngSubmit)="onSubmitEditTask(editTaskForm)"
+    *ngIf="isTaskBeingEdited"
+    fxLayoutGap="10px"
+  >
+    <mat-form-field>
+      <input matInput [ngModel]="currentTask.name" name="newTaskName" />
+    </mat-form-field>
+    <button mat-raised-button type="submit" color="primary">
+      Update Task
+    </button>
+    <button
+      mat-raised-button
+      type="reset"
+      color="accent"
+      (click)="cancelEditing()"
+    >
+      Cancel
+    </button>
   </form>
 </section>

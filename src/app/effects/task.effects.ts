@@ -14,6 +14,9 @@ import {
   DeleteTaskAction,
   DeleteTaskSuccessAction,
   DeleteTaskFailureAction,
+  EditTaskAction,
+  EditTaskSuccessAction,
+  EditTaskFailureAction,
 } from '../store/actions/task.actions';
 import { TaskService } from '../task.service';
 import { Task } from '../store/models/task.model';
@@ -34,45 +37,49 @@ export class TaskEffects {
 
   @Effect() addTask$ = this.actions$.pipe(
     ofType<AddTaskAction>(TaskActionTypes.ADD_TASK),
-    mergeMap(
-      (data) =>
-        this.taskService
-          .addTask(data.payload)
-          .then((result) => {
-            if (result) {
-              return new AddTaskSuccessAction(data.payload);
-            }
-          })
-          .catch((err) => new AddTaskFailureAction(err))
-
-      // pipe(
-      //   map(() => new AddTaskSuccessAction(data.payload)),
-      //   catchError((error) => of(new AddTaskFailureAction(error)))
-      // )
+    mergeMap((action) =>
+      this.taskService
+        .addTask(action.payload)
+        .then((result) => {
+          if (result) {
+            return new AddTaskSuccessAction(action.payload);
+          }
+        })
+        .catch((err) => new AddTaskFailureAction(err))
     )
   );
 
   @Effect() deleteTask$ = this.actions$.pipe(
     ofType<DeleteTaskAction>(TaskActionTypes.DELETE_TASK),
-    mergeMap(
-      (data) =>
-        this.taskService
-          .findMatchingTask(data.payload)
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              this.taskService.deleteTask(doc.id);
-            });
-            return new DeleteTaskSuccessAction(data.payload);
-          })
-          .catch((err) => {
-            // console.log('DeleteTaskSuccessAction dispatched');
-            return new DeleteTaskFailureAction(err);
-          })
+    mergeMap((action) =>
+      this.taskService
+        .findMatchingTask(action.payload)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            this.taskService.deleteTask(doc.id);
+          });
+          return new DeleteTaskSuccessAction(action.payload);
+        })
+        .catch((err) => {
+          return new DeleteTaskFailureAction(err);
+        })
+    )
+  );
 
-      // pipe(
-      //   map(() => new DeleteTaskSuccessAction(data.payload)),
-      //   catchError((error) => of(new DeleteTaskFailureAction(error)))
-      // )
+  @Effect() editTask$ = this.actions$.pipe(
+    ofType<EditTaskAction>(TaskActionTypes.EDIT_TASK),
+    mergeMap((action) =>
+      this.taskService
+        .findMatchingTask(action.payload.id)
+        .then((querySnapShot) => {
+          querySnapShot.forEach((doc) => {
+            this.taskService.editTask(doc.id, action.payload.name);
+          });
+          return new EditTaskSuccessAction(action.payload);
+        })
+        .catch((err) => {
+          return new EditTaskFailureAction(err);
+        })
     )
   );
 }

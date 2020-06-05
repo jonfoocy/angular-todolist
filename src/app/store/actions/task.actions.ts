@@ -11,6 +11,9 @@ export enum TaskActionTypes {
   DELETE_TASK = '[TASK] Delete Task',
   DELETE_TASK_SUCCESS = '[TASK] Delete Task Success',
   DELETE_TASK_FAILURE = '[TASK] Delete Task Failure',
+  EDIT_TASK = '[TASK] Edit Task',
+  EDIT_TASK_SUCCESS = '[TASK] Edit Task Success',
+  EDIT_TASK_FAILURE = '[TASK] Edit Task Failure',
 }
 
 export class LoadTaskAction implements Action {
@@ -62,7 +65,23 @@ export class DeleteTaskSuccessAction implements Action {
 export class DeleteTaskFailureAction implements Action {
   readonly type = TaskActionTypes.DELETE_TASK_FAILURE;
 
-  constructor(public payload: string) {}
+  constructor(public payload: Error) {}
+}
+
+export class EditTaskAction implements Action {
+  readonly type = TaskActionTypes.EDIT_TASK;
+
+  constructor(public payload: Task) {}
+}
+export class EditTaskSuccessAction implements Action {
+  readonly type = TaskActionTypes.EDIT_TASK_SUCCESS;
+
+  constructor(public payload: Task) {}
+}
+export class EditTaskFailureAction implements Action {
+  readonly type = TaskActionTypes.EDIT_TASK_FAILURE;
+
+  constructor(public payload: Error) {}
 }
 
 export type TaskAction =
@@ -74,4 +93,7 @@ export type TaskAction =
   | AddTaskFailureAction
   | DeleteTaskAction
   | DeleteTaskSuccessAction
-  | DeleteTaskFailureAction;
+  | DeleteTaskFailureAction
+  | EditTaskAction
+  | EditTaskSuccessAction
+  | EditTaskFailureAction;
