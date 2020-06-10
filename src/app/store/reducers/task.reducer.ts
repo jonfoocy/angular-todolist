@@ -11,6 +11,10 @@ const initialState: TaskState = {
   error: undefined,
 };
 
+const sortByDate = (tasks: Task[]) => {
+  return tasks.slice().sort((task1, task2) => task1.date - task2.date);
+};
+
 export function TaskReducer(
   state: TaskState = initialState,
   action: TaskAction
@@ -23,7 +27,7 @@ export function TaskReducer(
     case TaskActionTypes.LOAD_TASK_SUCCESS:
       return {
         ...state,
-        list: action.payload,
+        list: sortByDate(action.payload),
       };
     case TaskActionTypes.LOAD_TASK_FAILURE:
       return {
@@ -37,7 +41,6 @@ export function TaskReducer(
     case TaskActionTypes.ADD_TASK_SUCCESS:
       return {
         ...state,
-        list: [...state.list, action.payload],
       };
     case TaskActionTypes.ADD_TASK_FAILURE:
       return {
@@ -51,7 +54,7 @@ export function TaskReducer(
     case TaskActionTypes.DELETE_TASK_SUCCESS:
       return {
         ...state,
-        list: state.list.filter((task) => task.id !== action.payload),
+        list: state.list.filter((task) => task.id !== action.payload), // filter creates a new array
       };
     case TaskActionTypes.DELETE_TASK_FAILURE:
       return {

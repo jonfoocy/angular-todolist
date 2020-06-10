@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -13,6 +13,7 @@ import {
   LoadTaskAction,
   EditTaskAction,
 } from './store/actions/task.actions';
+import { TaskState } from './store/reducers/task.reducer';
 
 @Component({
   selector: 'app-root',
@@ -20,37 +21,26 @@ import {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  taskList$: Observable<any[]>;
-  sortedTaskList: Task[];
+  taskList$: Observable<Array<Task>>;
   error$: Observable<Error>;
   currentTask: Task = { id: '', name: '', date: undefined };
   isTaskBeingEdited = false;
 
-  constructor(
-    private store: Store<AppState>,
-    private firestore: AngularFirestore
-  ) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.taskList$ = this.firestore.collection('tasks').valueChanges();
+    this.taskList$ = this.store.select((store) => store.tasklist.list);
+    // this.taskList$.subscribe((task) => console.log(task));
+
     this.error$ = this.store.select((store) => store.tasklist.error);
 
     this.store.dispatch(new LoadTaskAction());
-    this.sortTaskList();
-  }
-
-  sortTaskList() {
-    this.taskList$.subscribe((tasks) => {
-      this.sortedTaskList = tasks
-        .slice()
-        .sort((task1, task2) => task1.date - task2.date);
-    });
   }
 
   addTask(taskName: string) {
     this.currentTask.id = uuidv4();
     this.currentTask.name = taskName;
-    this.currentTask.date = new Date();
+    this.currentTask.date = new Date().valueOf();
     this.store.dispatch(new AddTaskAction(this.currentTask));
     this.currentTask = { id: '', name: '', date: undefined };
   }

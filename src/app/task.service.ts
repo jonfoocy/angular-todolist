@@ -10,6 +10,7 @@ export class TaskService {
   constructor(private firestore: AngularFirestore) {}
 
   getTasks() {
+    // valueChanges() returns an Observable
     return this.firestore.collection<Task>('tasks').valueChanges();
   }
 

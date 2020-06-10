@@ -4,7 +4,7 @@
 
 <section fxLayoutAlign="center">
   <mat-list fxLayout="column">
-    <mat-list-item *ngFor="let task of sortedTaskList">
+    <mat-list-item *ngFor="let task of taskList$ | async">
       {{ task.name }}
       <button mat-icon-button (click)="localEditTask(task)">
         <mat-icon>edit</mat-icon>
