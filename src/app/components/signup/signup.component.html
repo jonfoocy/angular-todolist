@@ -1,0 +1,38 @@
+<h1 fxLayoutAlign="center">Sign Up</h1>
+
+<section fxLayoutAlign="center">
+  <form
+    fxLayout="column"
+    fxLayoutGap="10px"
+    [formGroup]="signupForm"
+    (ngSubmit)="onSubmitSignup()"
+  >
+    <mat-form-field>
+      <input
+        matInput
+        formControlName="email"
+        type="email"
+        placeholder="Email"
+        id="email"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        formControlName="password"
+        type="password"
+        placeholder="Password"
+        id="password"
+      />
+      <mat-hint>Must be at least 6 characters</mat-hint>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      type="submit"
+      color="primary"
+      [disabled]="signupForm.invalid"
+    >
+      Login
+    </button>
+  </form>
+</section>

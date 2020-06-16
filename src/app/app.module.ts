@@ -15,9 +15,25 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { TaskEffects } from './effects/task.effects';
+import { LoginComponent } from './components/login/login.component';
+import { TodolistComponent } from './components/todolist/todolist.component';
+import { AuthService } from './services/auth.service';
+import { AuthGuard } from './auth.guard';
+import { HeaderComponent } from './components/navigation/header/header.component';
+import { WelcomeComponent } from './components/welcome/welcome.component';
+import { AuthReducer } from './store/reducers/auth.reducer';
+import { SignupComponent } from './components/signup/signup.component';
+import { reducers } from './app.reducer';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    TodolistComponent,
+    HeaderComponent,
+    WelcomeComponent,
+    SignupComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -26,7 +42,7 @@ import { TaskEffects } from './effects/task.effects';
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({ tasklist: TaskReducer }),
+    StoreModule.forRoot(reducers),
     EffectsModule.forRoot([TaskEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
@@ -34,7 +50,7 @@ import { TaskEffects } from './effects/task.effects';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
   ],
-  providers: [],
+  providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

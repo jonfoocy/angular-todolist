@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 
-import { Task } from './store/models/task.model';
+import { Task } from '../store/models/task.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +33,6 @@ export class TaskService {
     return this.firestore
       .collection('tasks')
       .doc(docId)
-      .update({ name: newTask });
+      .update({ detail: newTask });
   }
 }

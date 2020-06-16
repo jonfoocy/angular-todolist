@@ -18,8 +18,7 @@ import {
   EditTaskSuccessAction,
   EditTaskFailureAction,
 } from '../store/actions/task.actions';
-import { TaskService } from '../task.service';
-import { Task } from '../store/models/task.model';
+import { TaskService } from '../services/task.service';
 
 @Injectable()
 export class TaskEffects {
@@ -75,7 +74,7 @@ export class TaskEffects {
         .findMatchingTask(action.payload.id)
         .then((querySnapShot) => {
           querySnapShot.forEach((doc) => {
-            this.taskService.editTask(doc.id, action.payload.name);
+            this.taskService.editTask(doc.id, action.payload.detail);
           });
           return new EditTaskSuccessAction(action.payload);
         })

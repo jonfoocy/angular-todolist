@@ -1,19 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { NgForm } from '@angular/forms';
-import { v4 as uuidv4 } from 'uuid';
-import { AngularFirestore } from '@angular/fire/firestore';
-
-import { AppState } from './store/models/app-state.model';
-import { Task } from './store/models/task.model';
-import {
-  AddTaskAction,
-  DeleteTaskAction,
-  LoadTaskAction,
-  EditTaskAction,
-} from './store/actions/task.actions';
-import { TaskState } from './store/reducers/task.reducer';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -21,60 +7,7 @@ import { TaskState } from './store/reducers/task.reducer';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  taskList$: Observable<Array<Task>>;
-  error$: Observable<Error>;
-  currentTask: Task = { id: '', name: '', date: undefined };
-  isTaskBeingEdited = false;
+  constructor() {}
 
-  constructor(private store: Store<AppState>) {}
-
-  ngOnInit(): void {
-    this.taskList$ = this.store.select((store) => store.tasklist.list);
-    // this.taskList$.subscribe((task) => console.log(task));
-
-    this.error$ = this.store.select((store) => store.tasklist.error);
-
-    this.store.dispatch(new LoadTaskAction());
-  }
-
-  addTask(taskName: string) {
-    this.currentTask.id = uuidv4();
-    this.currentTask.name = taskName;
-    this.currentTask.date = new Date().valueOf();
-    this.store.dispatch(new AddTaskAction(this.currentTask));
-    this.currentTask = { id: '', name: '', date: undefined };
-  }
-
-  deleteTask(id: string) {
-    this.store.dispatch(new DeleteTaskAction(id));
-  }
-
-  localEditTask(task: Task) {
-    this.isTaskBeingEdited = true;
-    this.currentTask = task;
-  }
-
-  editTask(newTaskName: string) {
-    this.currentTask.name = newTaskName;
-    this.store.dispatch(new EditTaskAction(this.currentTask));
-    this.currentTask = { id: '', name: '', date: undefined };
-  }
-
-  onSubmitNewTask(form: NgForm) {
-    this.addTask(form.value.task);
-    this.resetForm(form);
-  }
-
-  resetForm(form: NgForm) {
-    form.reset();
-  }
-
-  onSubmitEditTask(form: NgForm) {
-    this.editTask(form.value.newTaskName);
-    this.isTaskBeingEdited = false;
-  }
-
-  cancelEditing() {
-    this.isTaskBeingEdited = false;
-  }
+  ngOnInit(): void {}
 }
