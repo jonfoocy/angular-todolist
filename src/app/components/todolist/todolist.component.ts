@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { NgForm, FormControl, Validators, FormGroup } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
 
-import { AppState } from '../../store/models/app-state.model';
+import { AppState } from '../../app.reducer';
 import { Task } from '../../store/models/task.model';
 import {
   AddTaskAction,
